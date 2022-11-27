@@ -7,6 +7,7 @@ def Vertex():
 class Vertex:
      Key = Key();
      distance = 0;
+     value = 0;
      color =  np.array([0,0,0]); # 0 = WHITE; 1 = BLACK ; 2 = GRAY
      listPreviousVertices = [Vertex()];
 
