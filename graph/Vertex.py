@@ -2,16 +2,10 @@ from graph.Key import Key
 import numpy as np
 
 class Vertex:
-    Key = Key(0, 0)
-    distance = 0
-    value = 0
-    color = np.array([0, 0, 0])
-    # 0 = WHITE; 1 = BLACK ; 2 = GRAY
-    listPreviousVertices = []
-
-    def __init__(self, key, color):
+    def __init__(self, key):
+        self.value = 0
+        self.listPreviousVertices = []
         self.key = key
-        self.color = color
 
     def get_previous_vertex_with_shortest_distance(self):
         if self.listPreviousVertices.count() == 0:

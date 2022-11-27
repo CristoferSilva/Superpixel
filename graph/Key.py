@@ -1,7 +1,4 @@
 class Key:
-    height = 0
-    width = 0
-
     def __init__(self, height, width):
         self.height = height
         self.width = width
