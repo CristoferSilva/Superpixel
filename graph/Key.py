@@ -2,12 +2,12 @@ class Key:
     height = 0
     width = 0
 
-    def __init__(self, valueA, valueB):
-        self.height = valueA
-        self.width = valueB
+    def __init__(self, height, width):
+        self.height = height
+        self.width = width
 
     def __eq__(self, other):
-        if(isinstance(other, self)):
+        if isinstance(other, Key):
             return self.height == other.height and self.width == other.width
 
     def __str__(self):

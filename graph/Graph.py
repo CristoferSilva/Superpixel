@@ -7,82 +7,78 @@ from graph.Vertex import Vertex
 class Graph:
     height = 0
     width = 0
-    vertices = []
-    imgPath = ""
+    vertices = [Vertex(Key(0, 0), 0)]
+    img_path = ""
     image = []
     distanceParameter = 119.63
 
-    def __init__(self, height, width, imgPath, superPixelQuantity):
-        self.height = height
-        self.width = width
-        self.imgPath = imgPath
-        self.readImage(imgPath)
+    def __init__(self, img_path, superpixel_quantity):
+        self.img_path = img_path
+        self.readImage(img_path)
+        self.showImage()
+        #while superpixel_quantity:
+            #self.mergeVertices()
 
-        while(superPixelQuantity):
-            self.mergeVertices()
-
-    def readImage(self, imgPath):
-
-        currentImage = cv2.imread(imgPath)
-        currentImage = cv2.cvtColor(currentImage, cv2.COLOR_BGR2RGB)
-        self.image = currentImage
-        height, width, colorChannelNumber = currentImage.shape
+    def readImage(self, img_path):
+        self.image = cv2.imread(img_path)
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+        self.height, self.width, colorChannelNumber = self.image.shape
 
         for x in range(0, self.height):
             for y in range(0, self.width):
 
-                currentVertex = Vertex(Key(x, y), 0)
-                currentVertex.value = currentImage[x][y]
-                self.addVertex(currentVertex)
+                current_vertex = Vertex(Key(x, y), 0)
+                current_vertex.value = self.image[x][y]
+                self.addVertex(current_vertex)
 
-                if x - 1 >= 0:
-                    self.addPrevious(currentVertex, x - 1, y, currentImage)
+                if (x - 1) >= 0:
+                    self.addPrevious(current_vertex, x - 1, y)
 
-                if x + 1 >= 0:
-                    self.addPrevious(currentVertex, x + 1, y, currentImage)
+                if self.height - 1 >= (x + 1):
+                    self.addPrevious(current_vertex, x + 1, y)
 
-                if y + 1 >= 0:
-                    self.addPrevious(currentVertex, y + 1, y, currentImage)
+                if self.width - 1 >= (y + 1):
+                    self.addPrevious(current_vertex, x, y + 1)
 
-                if y - 1 >= 0:
-                    self.addPrevious(currentVertex, y - 1, y, currentImage)
+                if (y - 1) >= 0:
+                    self.addPrevious(current_vertex, x, y - 1)
 
-    def addPrevious(self, vertex, previousVertex_Index_X, previousVertex_Index_Y, image):
-        previousVertex = Vertex(Key(previousVertex_Index_X, previousVertex_Index_Y), 0)
-        self.addVertex(previousVertex)
-        previousVertex = self.vertices.__getitem__(self.vertices.index(previousVertex))
-        previousVertex.value = image[previousVertex_Index_X][previousVertex_Index_X]
-        vertex.listPreviousVertices.__add__(previousVertex)
+    def addPrevious(self, vertex, previous_vertex_index_x, previous_vertex_index_y):
+        previous_vertex = Vertex(Key(previous_vertex_index_x, previous_vertex_index_y), 0)
+        self.addVertex(previous_vertex)
+        previous_vertex = self.vertices.__getitem__(self.vertices.index(previous_vertex))
+        previous_vertex.value = self.image[previous_vertex_index_x][previous_vertex_index_y]
+        vertex.listPreviousVertices.append(previous_vertex)
 
     def addVertex(self, vertex):
         if not self.vertices.__contains__(vertex):
-            self.vertices.__add__(vertex)
+            self.vertices.append(vertex)
 
     def mergeVertices(self):
-        nearestNeighborQuantity = 1;
-        neighborRelationShipValues = [];
-        neighborRelationShip = [];
+        nearest_neighbor_quantity = 1
+        neighbor_relationship_values = []
+        neighbor_relationship = []
 
         for vertex in self.vertices:
-            neighborRelationShipValues.__add__(vertex.value)
-            arrayMergeNeighborResult = vertex.value;
+            neighbor_relationship_values.append(vertex.value)
+            merged_neighbor_array_result = vertex.value
             for neighbor in vertex.listPreviousVertices:
-               if np.linalg.norm(vertex - neighbor) < self.distanceParameter:
-                   neighborRelationShip.__add__(neighbor)
-                   neighborRelationShipValues.__add__(neighbor.value)
-                   arrayMergeNeighborResult = arrayMergeNeighborResult + neighbor.value
-                   nearestNeighborQuantity = nearestNeighborQuantity + 1;
+                if np.linalg.norm(vertex - neighbor) < self.distanceParameter:
+                    neighbor_relationship.append(neighbor)
+                    neighbor_relationship_values.append(neighbor.value)
+                    merged_neighbor_array_result = merged_neighbor_array_result + neighbor.value
+                    nearest_neighbor_quantity = nearest_neighbor_quantity + 1
 
-            arrayMergeNeighborResult = arrayMergeNeighborResult/nearestNeighborQuantity
+            merged_neighbor_array_result = merged_neighbor_array_result / nearest_neighbor_quantity
 
-            vertex.value = arrayMergeNeighborResult
+            vertex.value = merged_neighbor_array_result
 
-            for neighbor in neighborRelationShip:
-                neighbor.value = arrayMergeNeighborResult
+            for neighbor in neighbor_relationship:
+                neighbor.value = merged_neighbor_array_result
 
-            nearestNeighborQuantity = 1;
-            neighborRelationShipValues = [];
-            neighborRelationShip = [];
+            nearest_neighbor_quantity = 1
+            neighbor_relationship_values = []
+            neighbor_relationship = []
 
     def showImageWithSuperpixels(self):
         for vertex in self.vertices:
@@ -91,10 +87,6 @@ class Graph:
         plt.imshow(self.image)
         plt.show()
 
-
-
-
-
-
-
-
+    def showImage(self):
+        plt.imshow(self.image)
+        plt.show()
