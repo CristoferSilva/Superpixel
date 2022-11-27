@@ -1,14 +1,14 @@
 class Key:
-    valueA = 0
-    valueB = 0
+    height = 0
+    width = 0
 
     def __init__(self, valueA, valueB):
-        self.valueA = valueA
-        self.valueB = valueB
+        self.height = valueA
+        self.width = valueB
 
     def __eq__(self, other):
         if(isinstance(other, self)):
-            return self.valueA == other.valueA and self.valueB == other.valueB
+            return self.height == other.height and self.width == other.width
 
     def __str__(self):
-        return f"[ValueA: {self.valuea} | ValueB: {self.valueB}]<-)"
+        return f"[ValueA: {self.valuea} | ValueB: {self.width}]<-)"

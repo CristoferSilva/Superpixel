@@ -4,7 +4,8 @@ from matplotlib import pyplot as plt
 
 obj_img =  cv2.imread("images/car.jpg")
 obj_img = cv2.cvtColor(obj_img, cv2.COLOR_BGR2RGB)
-
+print(type(obj_img))
+input()
 plt.imshow(obj_img)
 plt.show()
 
@@ -41,7 +42,8 @@ plt.show()
 
 
 a = np.array([1,1,1])
-print(np.divide(a,[1,5,1]))
+print(a + [1,5,1])
+print(a / 5)
 
 
 
