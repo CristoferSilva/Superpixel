@@ -18,43 +18,50 @@ class Graph:
             self.mergeVertices()
 
     def readImage(self, img_path):
+        print("[+]-[readImage]")
         self.image = cv2.imread(img_path)
         self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
         self.height, self.width, colorChannelNumber = self.image.shape
 
         for x in range(0, self.height):
             for y in range(0, self.width):
+                print("[+]-[VISIT]-[Vertex(" + str(x) + ", " + str(y) + ")]")
 
                 current_vertex = Vertex(Key(x, y))
                 current_vertex.value = self.image[x][y]
                 self.addVertex(current_vertex)
-
+                current_vertex = self.vertices.__getitem__(self.vertices.index(current_vertex));
                 if (x - 1) >= 0:
-                    self.addPrevious(self.vertices.__getitem__(self.vertices.index(current_vertex)), x - 1, y)
+                    self.addPrevious(current_vertex, x - 1, y)
 
                 if self.height - 1 >= (x + 1):
-                    self.addPrevious(self.vertices.__getitem__(self.vertices.index(current_vertex)), x + 1, y)
+                    self.addPrevious(current_vertex, x + 1, y)
 
                 if self.width - 1 >= (y + 1):
-                    self.addPrevious(self.vertices.__getitem__(self.vertices.index(current_vertex)), x, y + 1)
+                    self.addPrevious(current_vertex, x, y + 1)
 
                 if (y - 1) >= 0:
-                    self.addPrevious(self.vertices.__getitem__(self.vertices.index(current_vertex)), x, y - 1)
+                    self.addPrevious(current_vertex, x, y - 1)
 
-
+        print("[-]-[readImage]")
 
     def addPrevious(self, vertex, previous_vertex_index_x, previous_vertex_index_y):
+        print("[+]-[addPrevious]")
         previous_vertex = Vertex(Key(previous_vertex_index_x, previous_vertex_index_y))
         self.addVertex(previous_vertex)
         previous_vertex = self.vertices.__getitem__(self.vertices.index(previous_vertex))
         previous_vertex.value = self.image[previous_vertex_index_x][previous_vertex_index_y]
         vertex.listPreviousVertices.append(previous_vertex)
+        print("[-]-[addPrevious]")
 
     def addVertex(self, vertex):
+        print("[+]-[addPrevious]")
         if not self.vertices.__contains__(vertex):
             self.vertices.append(vertex)
+        print("[-]-[addPrevious]")
 
     def mergeVertices(self):
+        print("[+]-[mergeVertices]")
         nearest_neighbor_quantity = 1
         neighbor_relationship_values = []
         neighbor_relationship = []
@@ -66,7 +73,7 @@ class Graph:
                 if np.linalg.norm(vertex.value - neighbor.value) <= self.distanceParameter:
                     neighbor_relationship.append(neighbor)
                     neighbor_relationship_values.append(neighbor.value)
-                    merged_neighbor_array_result = [int(merged_neighbor_array_result[0]) + int(neighbor.value[0]),int(merged_neighbor_array_result[1]) + int(neighbor.value[1]), int(merged_neighbor_array_result[2] + neighbor.value[2])]
+                    merged_neighbor_array_result = [merged_neighbor_array_result[0] + 0 + neighbor.value[0], merged_neighbor_array_result[1] + 0 + neighbor.value[1], merged_neighbor_array_result[2] + 0 + neighbor.value[2]]
                     nearest_neighbor_quantity = nearest_neighbor_quantity + 1
 
             merged_neighbor_array_result = np.array(merged_neighbor_array_result) / nearest_neighbor_quantity
@@ -80,13 +87,19 @@ class Graph:
             neighbor_relationship_values.clear()
             neighbor_relationship.clear()
 
+        print("[-]-[mergeVertices]")
+
     def showImageWithSuperpixels(self):
+        print("[+]-[showImageWithSuperpixels]")
         for vertex in self.vertices:
             self.image[vertex.key.height, vertex.key.width] = vertex.value
 
         plt.imshow(self.image)
         plt.show()
+        print("[-]-[showImageWithSuperpixels]")
 
     def showImage(self):
+        print("[+]-[showImage]")
         plt.imshow(self.image)
         plt.show()
+        print("[-]-[showImage]")
